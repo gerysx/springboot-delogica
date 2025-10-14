@@ -13,7 +13,7 @@ import com.delogica.springboot.model.OrderItem;
 public interface OrderItemMapper {
 
     @Mapping(source = "productId", target = "product.id")
-    OrderItemMapper toEntity(OrderItemInputDTO dto);
+    OrderItem toEntity(OrderItemInputDTO dto);
 
     @Mapping(source = "product.id", target = "productId")
     OrderItemOutputDTO toDto(OrderItem entity);

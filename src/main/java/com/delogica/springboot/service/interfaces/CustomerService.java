@@ -8,8 +8,8 @@ public interface CustomerService {
 	CustomerOutputDTO findByEmail(String email);
 	
 	CustomerOutputDTO findById(Long customerId);
-	
-	CustomerOutputDTO save(CustomerInputDTO customer);
+
+	CustomerOutputDTO create(CustomerInputDTO customer);
 	
 	CustomerOutputDTO updateById(CustomerInputDTO customer, Long id);
 	

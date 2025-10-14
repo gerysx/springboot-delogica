@@ -49,7 +49,7 @@ public class Address {
 	@NotBlank(message = "El país es obligatorio")
 	private String country;
 	
-	private boolean isActive;
+	private boolean isDefault;
 	
 	
 }

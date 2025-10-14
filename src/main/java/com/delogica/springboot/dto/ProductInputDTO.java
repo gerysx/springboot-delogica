@@ -1,5 +1,7 @@
 package com.delogica.springboot.dto;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +18,7 @@ public class ProductInputDTO {
 
     @NotNull(message = "Precio es obligatorio")
     @Min(value = 0, message = "Precio debe ser mayor o igual a 0")
-    private Double price;
+    private BigDecimal price;
 
     @NotNull(message = "Stock es obligatorio")
     @Min(value = 0, message = "Stock no puede ser negativo")

@@ -1,6 +1,7 @@
 package com.delogica.springboot.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,4 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // Buscar productos por nombre (contenga texto)
     
     List<Product> findByNameContainingIgnoreCase(String name);
+
+    Optional<Product> findBySku(String sku);
+
 }

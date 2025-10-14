@@ -37,7 +37,7 @@ public class Customer {
 	private long id;
 	
 	@Column(name="fullname", nullable = false)
-	private String fullname;
+	private String fullName;
 	
 	@Email
 	@NotBlank
