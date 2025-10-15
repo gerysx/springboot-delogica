@@ -13,6 +13,12 @@ import com.delogica.springboot.model.Customer;
 import com.delogica.springboot.repository.CustomerRepository;
 import com.delogica.springboot.service.interfaces.CustomerService;
 
+/**
+ * Servicio de clientes que gestiona operaciones de consulta y mantenimiento
+ * Orquesta el acceso a datos mediante CustomerRepository y el mapeo con
+ * CustomerMapper
+ */
+
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -24,6 +30,13 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerRepository = customerRepository;
     }
 
+    /**
+     * Busca un cliente por su email
+     *
+     * @param email email a consultar
+     * @return DTO del cliente encontrado
+     * @throws NotFoundException si no existe un cliente con ese email
+     */
     @Override
     public CustomerOutputDTO findByEmail(String email) {
 
@@ -36,6 +49,13 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toDto(optionalCustomer.get());
     }
 
+    /**
+     * Obtiene un cliente por su identificador
+     *
+     * @param customerId id del cliente
+     * @return DTO del cliente encontrado
+     * @throws NotFoundException si no existe un cliente con ese id
+     */
     @Override
     public CustomerOutputDTO findById(Long customerId) {
         Customer customer = customerRepository.findById(customerId)
@@ -44,6 +64,14 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toDto(customer);
     }
 
+    /**
+     * Actualiza los datos básicos de un cliente por id
+     *
+     * @param customer DTO de entrada con los nuevos datos
+     * @param id       id del cliente a actualizar
+     * @return DTO del cliente actualizado
+     * @throws NotFoundException si no existe un cliente con ese id
+     */
     @Override
     public CustomerOutputDTO updateById(CustomerInputDTO customer, Long id) {
         Customer findCustomer = customerRepository.findById(id)
@@ -58,6 +86,12 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toDto(updatedCustomer);
     }
 
+    /**
+     * Elimina un cliente por id
+     *
+     * @param id id del cliente a eliminar
+     * @throws NotFoundException si no existe un cliente con ese id
+     */
     @Override
     public void delete(Long id) {
 
