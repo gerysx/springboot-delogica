@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 public class Pageables {
   private static final int DEFAULT_SIZE = 20;
 
+  // ORDERS
+
   public Pageable withDefaultSort(Pageable pageable, Sort fallback) {
     if (pageable == null) {
       return PageRequest.of(0, DEFAULT_SIZE, fallback);
@@ -36,5 +38,11 @@ public class Pageables {
   public Sort productDefaultSort() {
     return Sort.by(Sort.Direction.ASC, "name")
                .and(Sort.by(Sort.Direction.DESC, "id"));
+}
+
+  // ADDRESESS
+  public Sort addressDefaultSort() {
+    return Sort.by(Sort.Direction.DESC, "isDefault") 
+               .and(Sort.by(Sort.Direction.DESC, "id")); 
 }
 }

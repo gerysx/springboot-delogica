@@ -25,7 +25,7 @@ public class Address {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+	private Long id;
 	
 	@ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
@@ -49,7 +49,7 @@ public class Address {
 	@NotBlank(message = "El país es obligatorio")
 	private String country;
 	
-	private boolean isDefault;
+	private Boolean isDefault;
 	
 	
 }

@@ -13,13 +13,17 @@ import com.delogica.springboot.model.Address;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-	 // Listar direcciones de un cliente
-	
+    // Listar direcciones de un cliente
+
     List<Address> findByCustomerId(Long customerId);
 
     // Buscar dirección por si es default
-    
-    Optional<Address> findByCustomerIdAndIsDefaultTrue(Long customerId);
-    
+
+    List<Address> findByCustomerIdAndIsDefaultTrue(Long customerId);
+
     Page<Address> findAllByCustomerId(Long customerId, Pageable pageable);
+
+    Optional<Address> findByIdAndCustomerId(Long addressId, Long customerId);
+
+    long deleteByIdAndCustomerId(Long addressId, Long customerId);
 }
