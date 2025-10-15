@@ -32,7 +32,8 @@ import jakarta.validation.constraints.Positive;
 
 /**
  * Servicio de Orders que orquesta operaciones de consulta
- * Usa OrderRepository para la persistencia y OrderMapper y OrderItemMapper para el mapeo DTO ↔ entidad
+ * Usa OrderRepository para la persistencia y OrderMapper y OrderItemMapper para
+ * el mapeo DTO ↔ entidad
  */
 @Service
 @Validated

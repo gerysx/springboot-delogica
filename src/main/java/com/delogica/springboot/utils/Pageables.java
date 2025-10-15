@@ -23,4 +23,18 @@ public class Pageables {
     return Sort.by(Sort.Direction.DESC, "orderDate")
         .and(Sort.by(Sort.Direction.DESC, "id"));
   }
+
+  // CUSTOMERS
+
+  public Sort customerDefaultSort() {
+    return Sort.by(Sort.Direction.ASC, "fullName")
+               .and(Sort.by(Sort.Direction.DESC, "id"));
+}
+
+
+  // PRODUCTS
+  public Sort productDefaultSort() {
+    return Sort.by(Sort.Direction.ASC, "name")
+               .and(Sort.by(Sort.Direction.DESC, "id"));
+}
 }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.delogica.springboot.dto.ProductInputDTO;
 import com.delogica.springboot.dto.ProductOutputDTO;
@@ -16,6 +17,13 @@ import com.delogica.springboot.mapper.ProductMapper;
 import com.delogica.springboot.model.Product;
 import com.delogica.springboot.repository.ProductRepository;
 import com.delogica.springboot.service.interfaces.ProductService;
+import com.delogica.springboot.utils.Pageables;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Servicio de productos que orquesta operaciones de consulta y comando
@@ -23,27 +31,22 @@ import com.delogica.springboot.service.interfaces.ProductService;
  * ↔ entidad
  */
 @Service
+@Validated
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-
-   
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
-        this.productRepository = productRepository;
-        this.productMapper = productMapper;
-    }
+    private final Pageables pageables;
 
     /**
-     * Devuelve una página de productos según los criterios de paginación
-     *
-     * @param pageable información de página y orden
-     * @return página de productos mapeados a DTO
+     * Devuelve una página de productos según los criterios de paginación.
+     * Si el pageable no trae sort, aplica el orden por defecto (name ASC, id DESC).
      */
     @Override
     public Page<ProductOutputDTO> findAll(Pageable pageable) {
-        Page<Product> productPage = productRepository.findAll(pageable);
-        return productPage.map(productMapper::toDto);
+        Pageable effective = pageables.withDefaultSort(pageable, pageables.productDefaultSort());
+        return productRepository.findAll(effective).map(productMapper::toDto);
     }
 
     /**
@@ -53,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
      * @return lista de productos que coinciden, mapeados a DTO
      */
     @Override
-    public List<ProductOutputDTO> findByName(String name) {
+    public List<ProductOutputDTO> findByName(@NotBlank String name) {
         List<Product> productName = productRepository.findByNameContainingIgnoreCase(name);
 
         return productName.stream()
@@ -84,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
      *                                        indicado
      */
     @Override
-    public ProductOutputDTO create(ProductInputDTO dto) {
+    public ProductOutputDTO create(@Valid @NotNull ProductInputDTO dto) {
 
         Optional<Product> existingProduct = productRepository.findBySku(dto.getSku());
 
@@ -110,10 +113,19 @@ public class ProductServiceImpl implements ProductService {
      * @throws NotFoundException si no existe un producto con el id indicado
      */
     @Override
-    public ProductOutputDTO update(Long id, ProductInputDTO dto) {
+    public ProductOutputDTO update(@NotNull @Positive Long id, @Valid @NotNull ProductInputDTO dto) {
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Producto no encontrado con id: " + id));
+
+        // Evita duplicados de SKU al actualizar
+        if (!product.getSku().equalsIgnoreCase(dto.getSku())) {
+            productRepository.findBySku(dto.getSku())
+                    .ifPresent(p -> {
+                        throw new ResourceAlreadyExistsException(
+                                "Ya existe un producto con el SKU: " + dto.getSku());
+                    });
+        }
 
         product.setName(dto.getName());
         product.setSku(dto.getSku());
@@ -121,9 +133,7 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(dto.getStock());
         product.setActive(dto.getActive());
 
-        Product updatedProduct = productRepository.save(product);
-
-        return productMapper.toDto(updatedProduct);
+        return productMapper.toDto(productRepository.save(product));
 
     }
 
